@@ -211,6 +211,7 @@ CREATE TABLE Departamento
 	nombre varchar(50) not null,
 	numero int not null,
 	cantidad varchar(30) not null,
+	idSucursal int not null,
 	estatus bit default 1 not null
 );
 GO
@@ -389,6 +390,7 @@ CREATE TABLE MetodoPago
 (
 	idMetodoPago int identity(1,1),
 	tipo varchar(50) not null,
+	idCliente int not null,
 	estatus bit default 1 not null
 );
 GO
@@ -410,6 +412,7 @@ CREATE TABLE Nomina
 	numero int not null,
 	persona varchar(50) not null,
 	fecha datetime not null,
+	idEmpleado int not null,
 	estatus bit default 1 not null
 );
 GO
@@ -476,6 +479,7 @@ CREATE TABLE Prestacion
 	idPrestacion int identity(1,1),
 	clasificacion varchar(50) not null,
 	descripcion varchar(50) not null,
+	idEmpleado int not null,
 	estatus bit default 1 not null
 );
 GO
@@ -485,6 +489,7 @@ CREATE TABLE Produccion
 	idProduccion int identity(1,1),
 	cantidadFinal int not null,
 	ingresos varchar(50) not null,
+	idProducto int not null,
 	estatus bit default 1 not null
 );
 GO
@@ -501,6 +506,7 @@ CREATE TABLE Producto
 	idEnvio int not null,
 	idDevolucion int not null,
 	idCompra int not null,
+	idProduccion int not null,
 	estatus bit default 1 not null
 );
 GO
@@ -515,6 +521,7 @@ CREATE TABLE Proveedor
 	numero int not null,
 	ciudad varchar(50) not null,
 	telefono int not null,
+	idRepresentante int not null,
 	estatus bit default 1 not null
 );
 GO
@@ -806,6 +813,8 @@ ALTER TABLE Producto ADD CONSTRAINT FK_ProductoDevolucion FOREIGN KEY (idDevoluc
 Devolucion(idDevolucion)
 ALTER TABLE Producto ADD CONSTRAINT FK_ProductoCompra FOREIGN KEY (idCompra) REFERENCES 
 Compra(idCompra)
+ALTER TABLE Producto ADD CONSTRAINT FK_ProductoProduccion FOREIGN KEY (idProduccion) REFERENCES 
+Produccion(idProduccion)
 --Puesto
 ALTER TABLE Puesto ADD CONSTRAINT FK_PuestoEmpleado FOREIGN KEY (idEmpleado) REFERENCES 
 Empleado(idEmpleado)
@@ -814,6 +823,9 @@ ALTER TABLE Receta ADD CONSTRAINT FK_RecetaDoctor FOREIGN KEY (idDoctor) REFEREN
 Doctor(idDoctor)
 ALTER TABLE Receta ADD CONSTRAINT FK_RecetaPaciente FOREIGN KEY (idPaciente) REFERENCES 
 Paciente(idPaciente)
+--Prestacion
+ALTER TABLE Prestacion ADD CONSTRAINT FK_PrestacionEmpleado FOREIGN KEY (idEmpleado) REFERENCES 
+Empleado(idEmpleado)
 --Representante
 ALTER TABLE Representante ADD CONSTRAINT FK_RepresentanteEmpresa FOREIGN KEY (idEmpresa) REFERENCES 
 Empresa(idEmpresa)
@@ -842,6 +854,9 @@ ALTER TABLE ProductoOferta ADD CONSTRAINT FK_ProductoOfertaProducto FOREIGN KEY 
 Producto(idProducto)
 ALTER TABLE ProductoOferta ADD CONSTRAINT FK_ProductoOfertaOferta FOREIGN KEY (idOferta) REFERENCES 
 Oferta(idOferta)
+--Metodo Pago
+ALTER TABLE MetodoPago ADD CONSTRAINT FK_MetodoPagoCliente FOREIGN KEY (idCliente) REFERENCES 
+Cliente(idCliente)
 --ProductoVenta
 ALTER TABLE ProductoVenta ADD CONSTRAINT FK_ProductoVentaProducto FOREIGN KEY (idProducto) REFERENCES 
 Producto(idProducto)
@@ -852,6 +867,23 @@ ALTER TABLE SucursalEmpleado ADD CONSTRAINT FK_SucursalEmpleadoSucursal FOREIGN 
 Sucursal(idSucursal)
 ALTER TABLE SucursalEmpleado ADD CONSTRAINT FK_SucursalEmpleadoEmpleado FOREIGN KEY (idEmpleado) REFERENCES 
 Empleado(idEmpleado)
+--Nomina
+ALTER TABLE Nomina ADD CONSTRAINT FK_NominaEmpleado FOREIGN KEY (idEmpleado) REFERENCES 
+Empleado(idEmpleado)
+--ClienteMetodoPago
+ALTER TABLE ClienteMetodoPago ADD CONSTRAINT FK_ClienteMetodoPagoCliente FOREIGN KEY (idCliente) REFERENCES 
+Cliente(idCliente)
+ALTER TABLE ClienteMetodoPago ADD CONSTRAINT FK_ClienteMetodoPagoMetodoPago FOREIGN KEY (idMetodoPago) REFERENCES 
+MetodoPago(idMetodoPago)
+--Departamento
+ALTER TABLE Departamento ADD CONSTRAINT FK_DepartamentoSucursal FOREIGN KEY (idSucursal) REFERENCES 
+Sucursal(idSucursal)
+--Contrato
+ALTER TABLE Contrato ADD CONSTRAINT FK_ContratoEmpleado FOREIGN KEY (idEmpleado) REFERENCES 
+Empleado(idEmpleado)
+--Proveedor
+ALTER TABLE Proveedor ADD CONSTRAINT FK_ProveedorRepresentante FOREIGN KEY (idRepresentante) REFERENCES 
+Representante(idRepresentante)
 
 
 
